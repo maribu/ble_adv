@@ -1,0 +1,5 @@
+/doc
+/scanner
+/atc_dumper
+*.o
+*.so
