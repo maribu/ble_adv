@@ -70,7 +70,7 @@ on memory safety) which parse (somewhat) complex data formats of messages receiv
 sources as `root` is ranked pretty high on the list of things I'd personally avoid doing. Luckily,
 the situation is not as bad as it initially sounds:
 
-1.  Only two capabilities are actually needed to, not full `root` access. Just run
+1.  Only two capabilities are actually needed, not full `root` access. Just run
     <code>sudo setcap 'cap_net_raw,cap_net_admin+eip' &lt;program&gt;</code> on your executable to
     get it running.
 2.  You could implement your program in a way that it drops its capabilities right after it enabled
@@ -78,6 +78,6 @@ the situation is not as bad as it initially sounds:
     with [libcap-ng](https://people.redhat.com/sgrubb/libcap-ng/) this is straight forward.
     However, your program won't be able to disable scanning after it has completed its task.
 3.  You could fork in your program and let e.g. the parent process keep the capabilities, while the
-    child processg gives them up. The parent will only enable and disable BLE scanning, but leave
+    child process gives them up. The parent will only enable and disable BLE scanning, but leave
     the parsing of the child process. This way, the process doing the risky part runs without extra
     capabilities.
