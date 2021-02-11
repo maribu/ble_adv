@@ -17,7 +17,7 @@ DESTDIR :=
 all: $(BINARIES) $(LIB)
 
 clean:
-	rm -f $(BINARIES) $(OBJS) $(LIB)
+	rm -f $(BINARIES) $(OBJS)
 	rm -rf doc
 
 scanner: $(SCANNER_OBJS) $(LIB_OBJS)
