@@ -102,7 +102,7 @@ static int parse_eir(struct ble_adv *dest, const uint8_t *eir, size_t eir_len)
             break;
         case EIR_TX_POWER:
             if (field_len == 1) {
-                dest->tx_power = eir[0];
+                dest->tx_power = (int8_t)eir[0];
             }
             break;
         case EIR_SERVICE_DATA:

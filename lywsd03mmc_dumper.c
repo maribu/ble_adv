@@ -1,15 +1,18 @@
 /* SPDX-License-Identifier: BSD-3-Clause */
 /**
- * @defgroup    atc_dumper  Example program: Dump data from ATC temperature and humidity sensors
+ * @defgroup    lywsd03mmc_dumper   Example program: Dump data from LYWSD03MMC temperature and
+ *                                  humidity sensors
  *
  * @{
  * @brief   This program demonstrates the usage of the ble_adv library.
  * @file
  *
- * This program dumps the data received from cheap BLE temperature and humidity sensors, provided
- * the custom firmware at https://github.com/atc1441/ATC_MiThermometer is installed.
+ * This program dumps the data received from cheap LYWSD03MMC BLE temperature and humidity sensors,
+ * provided the [this](https://github.com/atc1441/ATC_MiThermometer) or
+ * [this](https://github.com/pvvx/ATC_MiThermometer) custom firmware is used.
  */
 #include "ble_adv.h"
+#include "lywsd03mmc.h"
 
 #include <endian.h>
 #include <errno.h>
@@ -17,34 +20,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/**
- * @brief   Raw format of the service data send by the ATC custom firmware
- *
- * @note    This is a packed structure to match the exact memory layout and force the compiler
- *          to treat memory accesses as unaligned.
- */
-struct atc_service_data {
-    uint8_t addr[6];            /**< bluetooth address in correct byte order */
-    int16_t temperature;        /**< Temperature in 0.1 °C, network byte order */
-    uint8_t humidity;           /**< Relative humidity in % */
-    uint8_t bat;                /**< Battery level in % */
-    uint16_t bat_mv;            /**< Battery voltage in mV, network byte order */
-    uint8_t frame_counter;      /**< Frame counter */
-} __attribute__((packed));
-
-/**
- * @brief   Parse measurement data
- */
-struct measurement {
-    int16_t temperature;        /**< Temperature in 0.1 °C */
-    uint16_t bat_mv;            /**< Battery voltage in mV */
-    uint8_t humidity;           /**< Relative humidity in % */
-    uint8_t bat;                /**< Battery level in % */
-};
-
 static int dev;
 
-static void handle_exit(int signal)
+static void __attribute__((noreturn)) handle_exit(int signal)
 {
     (void)signal;
     /* stop BLE scanning on exit */
@@ -55,15 +33,6 @@ static void handle_exit(int signal)
 static struct sigaction exit_handler = {
     .sa_handler = handle_exit,
 };
-
-static void parse_measurement(struct measurement *dest, const uint8_t *data)
-{
-    const struct atc_service_data *raw = (const struct atc_service_data *)data;
-    dest->temperature = be16toh(raw->temperature);
-    dest->bat_mv = be16toh(raw->bat_mv);
-    dest->humidity = raw->humidity;
-    dest->bat = raw->bat;
-}
 
 int main(int argc, const char **argv)
 {
@@ -97,12 +66,12 @@ int main(int argc, const char **argv)
         }
 
         if ((adv.has & BLE_ADV_HAS_SERVICE_DATA) && (adv.service_uuid16 = 0x181a)
-            && (adv.service_data_len == sizeof(struct atc_service_data))) {
+            && (adv.service_data_len == sizeof(struct lywsd03mmc_service_data))) {
             printf("%s [%02X:%02X:%02X:%02X:%02X:%02X] RSSI: %u\n",
                    adv.name, adv.addr[0], adv.addr[1], adv.addr[2], adv.addr[3], adv.addr[4],
                    adv.addr[5], (unsigned)adv.rssi);
-            struct measurement data;
-            parse_measurement(&data, adv.service_data);
+            struct lywsd03mmc_data data;
+            lywsd03mmc_parse(&data, adv.service_data);
             int temp_int; unsigned temp_rem;
             if (data.temperature >= 0) {
                 temp_int = data.temperature / 10;
@@ -116,7 +85,6 @@ int main(int argc, const char **argv)
                    temp_int, temp_rem, data.humidity, data.bat, data.bat_mv);
         }
     }
-    return 0;
 }
 
 /** @} */

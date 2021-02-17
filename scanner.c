@@ -15,7 +15,7 @@
 
 static int dev;
 
-static void handle_exit(int signal)
+static void __attribute__((noreturn)) handle_exit(int signal)
 {
     (void)signal;
     /* stop BLE scanning on exit */
@@ -126,7 +126,6 @@ int main(int argc, const char **argv)
             }
         }
     }
-    return 0;
 }
 
 /** @} */

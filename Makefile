@@ -2,14 +2,17 @@
 
 LIB_OBJS := ble_adv.o
 SCANNER_OBJS := scanner.o
-ATC_DUMPER_OBJS := atc_dumper.o
-OBJS := $(SCANNER_OBJS) $(CONTROL_OBJS) $(LIB_OBJS)
+LYWSD03MMC_DUMPER_OBJS := lywsd03mmc_dumper.o
+OBJS := $(SCANNER_OBJS) $(LYWSD03MMC_DUMPER_OBJS) $(LIB_OBJS)
 HEADERS := ble_adv.h
-BINARIES := scanner atc_dumper
+BINARIES := scanner lywsd03mmc_dumper
 LIB := libble_adv.so
 CC := gcc
 DOXYGEN := doxygen
-CFLAGS := -fPIE -Wall -Werror -Wextra -pedantic -std=c11 -O0 -g -Wcast-align -D_DEFAULT_SOURCE
+CFLAGS := -fPIE -Wall -Werror -Wextra -pedantic -std=c11 -O0 -g -Wcast-align -D_DEFAULT_SOURCE -Iinclude
+ifeq (clang,$(CC))
+  CFLAGS += -Weverything -Wno-padded -Wno-disabled-macro-expansion -Wno-unused-macros
+endif
 LDFLAGS := -lbluetooth
 PREFIX := /usr/local
 DESTDIR :=
@@ -17,13 +20,13 @@ DESTDIR :=
 all: $(BINARIES) $(LIB)
 
 clean:
-	rm -f $(BINARIES) $(OBJS)
+	rm -f $(BINARIES) $(OBJS) $(LIB)
 	rm -rf doc
 
 scanner: $(SCANNER_OBJS) $(LIB_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LDFLAGS_EXAMPLES)
 
-atc_dumper: $(ATC_DUMPER_OBJS) $(LIB_OBJS)
+lywsd03mmc_dumper: $(LYWSD03MMC_DUMPER_OBJS) $(LIB_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c $(HEADERS)

@@ -1,5 +1,5 @@
 /doc
 /scanner
-/atc_dumper
+/lywsd03mmc_dumper
 *.o
 *.so
