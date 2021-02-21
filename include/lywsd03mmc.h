@@ -2,6 +2,9 @@
 #ifndef LYWSD03MMC_H
 #define LYWSD03MMC_H
 
+#include <endian.h>
+#include <stdint.h>
+
 /**
  * @defgroup    lywsd03mmc  Trivial library to parse temperature / humidity data advertised by
  *                          Xiaomi LYWSD03MMC sensors running a custom firmware.
