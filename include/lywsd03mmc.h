@@ -76,7 +76,7 @@ static inline int lywsd03mmc_is_match(const struct ble_adv *adv)
  * @param[out]  dest    Where to write the extracted data
  * @param[in]   adv     BLE advertisement to extract the measurement data from
  *
- * @pre     @ref lywsd03mmc_is_match returned 1 on @p adv
+ * @pre     Calling @ref lywsd03mmc_is_match returns 1 on @p adv
  */
 static inline void lywsd03mmc_parse(struct lywsd03mmc_data *dest, const struct ble_adv *adv)
 {
