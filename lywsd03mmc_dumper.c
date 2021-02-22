@@ -65,13 +65,12 @@ int main(int argc, const char **argv)
             exit(EXIT_FAILURE);
         }
 
-        if ((adv.has & BLE_ADV_HAS_SERVICE_DATA) && (adv.service_uuid16 = 0x181a)
-            && (adv.service_data_len == sizeof(struct lywsd03mmc_service_data))) {
+        if (lywsd03mmc_is_match(&adv)) {
             printf("%s [%02X:%02X:%02X:%02X:%02X:%02X] RSSI: %u\n",
                    adv.name, adv.addr[0], adv.addr[1], adv.addr[2], adv.addr[3], adv.addr[4],
                    adv.addr[5], (unsigned)adv.rssi);
             struct lywsd03mmc_data data;
-            lywsd03mmc_parse(&data, adv.service_data);
+            lywsd03mmc_parse(&data, &adv);
             int temp_int; unsigned temp_rem;
             if (data.temperature >= 0) {
                 temp_int = data.temperature / 10;
