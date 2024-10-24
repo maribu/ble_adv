@@ -11,7 +11,12 @@ CC := gcc
 DOXYGEN := doxygen
 CFLAGS := -fPIE -Wall -Werror -Wextra -pedantic -std=c11 -O0 -g -Wcast-align -D_DEFAULT_SOURCE -Iinclude
 ifeq (clang,$(CC))
-  CFLAGS += -Weverything -Wno-padded -Wno-disabled-macro-expansion -Wno-unused-macros
+  CFLAGS += -Weverything
+  CFLAGS += -Wno-padded
+  CFLAGS += -Wno-disabled-macro-expansion
+  CFLAGS += -Wno-unused-macros
+  CFLAGS += -Wno-unsafe-buffer-usage
+  CFLAGS += -Wno-declaration-after-statement
 endif
 LDFLAGS := -lbluetooth
 PREFIX := /usr/local

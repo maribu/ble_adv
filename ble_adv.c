@@ -83,6 +83,8 @@ static int parse_eir(struct ble_adv *dest, const uint8_t *eir, size_t eir_len)
         field_len--;
         eir_len--;
         switch (header) {
+        default:
+            break;
         case EIR_FLAGS:
             if (field_len >= 1) {
                 dest->flags = *eir;

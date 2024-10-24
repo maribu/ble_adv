@@ -73,12 +73,12 @@ int main(int argc, const char **argv)
             lywsd03mmc_parse(&data, &adv);
             int temp_int; unsigned temp_rem;
             if (data.temperature >= 0) {
-                temp_int = data.temperature / 10;
-                temp_rem = data.temperature % 10;
+                temp_int = (unsigned)data.temperature / 10;
+                temp_rem = (unsigned)data.temperature % 10;
             }
             else {
                 temp_int = (data.temperature + 9) / 10;
-                temp_rem = (-data.temperature) % 10;
+                temp_rem = (unsigned)(-data.temperature) % 10;
             }
             printf("temperature = %d.%u °C, humidity = %u %%, battery = %u %% (%u mV)\n",
                    temp_int, temp_rem, data.humidity, data.bat, data.bat_mv);
